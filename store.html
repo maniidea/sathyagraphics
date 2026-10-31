@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Online Store - Digital & Xerox Pro</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { font-family: system-ui, -apple-system, sans-serif; background-color: #f1f5f9; color: #0f172a; margin: 0; }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-900">
+
+  <!-- Navbar -->
+  <header style="padding: 15px 30px; background: #0f172a; color: #fff; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1e293b; position: sticky; top: 0; z-index: 50;">
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <div style="width: 40px; height: 40px; background: #059669; color: #fff; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 900;">DS</div>
+      <span style="font-size: 18px; font-weight: 900; color: #fff;">Digital & Xerox Pro</span>
+    </div>
+    <nav style="display: flex; align-items: center; gap: 20px; font-size: 14px; font-weight: bold;">
+      <a href="index.html" style="color: #cbd5e1; text-decoration: none;">Home</a>
+      <a href="order.html" style="color: #cbd5e1; text-decoration: none;">Upload & Order</a>
+      <a href="store.html" style="color: #34d399; text-decoration: none;">Online Store</a>
+      <a href="track.html" style="color: #cbd5e1; text-decoration: none;">Track Order</a>
+    </nav>
+  </header>
+
+  <!-- Store Header & Catalog -->
+  <div style="max-width: 1300px; margin: 40px auto; padding: 0 20px; box-sizing: border-box;">
+    <div style="text-align: center; margin-bottom: 30px;">
+      <span style="font-size: 11px; font-weight: 900; color: #059669; background: #d1fae5; padding: 6px 14px; border-radius: 20px; text-transform: uppercase; display: inline-block; margin-bottom: 10px;">Customer Storefront</span>
+      <h1 style="font-size: 30px; font-weight: 900; color: #0f172a; margin: 0 0 8px 0;">Computer Accessories & Stationery</h1>
+      <p style="font-size: 14px; color: #64748b; font-weight: 600; margin: 0;">Click on any product to view details, or place your order directly via WhatsApp.</p>
+    </div>
+
+    <!-- Search Box -->
+    <div style="max-width: 400px; margin: 0 auto 35px auto; position: relative;">
+      <input type="text" id="searchInput" onkeyup="filterProducts()" placeholder="Search store catalog..." style="width: 100%; box-sizing: border-box; padding: 12px 16px; border-radius: 14px; border: 1px solid #cbd5e1; font-size: 14px; outline: none; background: #fff; font-weight: 600;">
+    </div>
+
+    <!-- Product Grid Container -->
+    <div id="productGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px;">
+      <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #64748b; font-weight: bold;">
+        <i class="fas fa-spinner fa-spin"></i> Loading store items from Google Sheets...
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick View Modal Popup -->
+  <div id="productModal" style="display: none; position: fixed; inset: 0; background: rgba(2,6,23,0.8); z-index: 100; align-items: center; justify-content: center; padding: 20px;">
+    <div style="background: #fff; border-radius: 24px; max-width: 600px; width: 100%; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); position: relative;">
+      <button onclick="closeModal()" style="position: absolute; top: 15px; right: 15px; background: #f1f5f9; border: none; width: 36px; height: 36px; border-radius: 50%; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #0f172a; font-size: 16px; z-index: 10;">
+        <i class="fas fa-times"></i>
+      </button>
+      <div style="max-height: 280px; background: #f8fafc; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid #e2e8f0; overflow: hidden;">
+        <img id="modalImg" src="" alt="" style="max-height: 260px; width: 100%; object-fit: contain; padding: 15px; box-sizing: border-box;">
+      </div>
+      <div style="padding: 30px;">
+        <span id="modalCategory" style="font-size: 11px; font-weight: 900; color: #059669; text-transform: uppercase; background: #d1fae5; padding: 4px 10px; border-radius: 6px;">Category</span>
+        <h2 id="modalTitle" style="font-size: 22px; font-weight: 900; color: #0f172a; margin: 10px 0 5px 0;">Product Name</h2>
+        <p id="modalId" style="font-size: 12px; font-weight: 800; color: #64748b; font-family: monospace; margin: 0 0 15px 0;">PROD-ID</p>
+        <p id="modalDetails" style="font-size: 14px; font-weight: 600; color: #475569; margin: 0 0 20px 0; line-height: 1.5;">Description goes here...</p>
+        
+        <div style="display: flex; align-items: center; justify-content: space-between; background: #f8fafc; padding: 15px; border-radius: 14px; border: 1px solid #e2e8f0; margin-bottom: 20px;">
+          <div>
+            <span style="font-size: 12px; font-weight: 800; color: #64748b; display: block;">Price</span>
+            <span id="modalPrice" style="font-size: 22px; font-weight: 900; color: #059669;">₹0</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <label style="font-size: 13px; font-weight: 800; color: #475569;">Quantity:</label>
+            <input type="number" id="modalQty" value="1" min="1" style="width: 60px; padding: 8px; border-radius: 8px; border: 1px solid #cbd5e1; font-weight: 800; text-align: center; font-size: 14px; background: #fff;">
+          </div>
+        </div>
+
+        <button id="modalOrderBtn" style="width: 100%; background: #059669; color: #fff; padding: 14px; border-radius: 12px; font-weight: 900; font-size: 15px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 12px rgba(5,150,105,0.2);">
+          <i class="fab fa-whatsapp" style="font-size: 20px;"></i><span>Order via WhatsApp</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Customer Details & WhatsApp Checkout Modal -->
+  <div id="customerModal" style="display: none; position: fixed; inset: 0; background: rgba(2,6,23,0.8); z-index: 100; align-items: center; justify-content: center; padding: 20px;">
+    <div style="background: #fff; border-radius: 24px; max-width: 450px; width: 100%; padding: 30px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); position: relative;">
+      <button onclick="closeCustomerModal()" style="position: absolute; top: 15px; right: 15px; background: #f1f5f9; border: none; width: 36px; height: 36px; border-radius: 50%; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #0f172a;">
+        <i class="fas fa-times"></i>
+      </button>
+      <h3 style="font-size: 20px; font-weight: 900; color: #0f172a; margin: 0 0 5px 0;">Enter Your Details</h3>
+      <p style="font-size: 13px; color: #64748b; font-weight: 600; margin: 0 0 20px 0;">Please enter your name and phone number to generate an Order ID and open WhatsApp.</p>
+      
+      <form onsubmit="submitCustomerOrder(event)" style="display: flex; flex-direction: column; gap: 15px;">
+        <div>
+          <label style="display: block; font-size: 12px; font-weight: 800; color: #334155; margin-bottom: 6px;">Your Name *</label>
+          <input type="text" id="custNameInput" required placeholder="Enter full name" style="width: 100%; box-sizing: border-box; padding: 12px; border-radius: 10px; border: 1px solid #cbd5e1; font-weight: 600; font-size: 14px; outline: none;">
+        </div>
+        <div>
+          <label style="display: block; font-size: 12px; font-weight: 800; color: #334155; margin-bottom: 6px;">Mobile Number *</label>
+          <input type="tel" id="custPhoneInput" required placeholder="10-digit mobile number" style="width: 100%; box-sizing: border-box; padding: 12px; border-radius: 10px; border: 1px solid #cbd5e1; font-weight: 600; font-size: 14px; outline: none;">
+        </div>
+        <button type="submit" id="proceedBtn" style="background: #059669; color: #fff; padding: 14px; border-radius: 10px; font-weight: 900; font-size: 15px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px; box-shadow: 0 4px 12px rgba(5,150,105,0.2);">
+          <i class="fab fa-whatsapp" style="font-size: 18px;"></i><span>Proceed to WhatsApp</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxi1KoeE9kWFhzS_4yZVgBnsRPocx3QdBaovikxskBj76OVedvfamVZYDJ4xx4oFxrm/exec";
+    let pendingOrderData = null;
+
+    window.onload = function() {
+      loadCustomerProducts();
+    };
+
+    function loadCustomerProducts() {
+      let oldScript = document.getElementById('jsonpScriptTag');
+      if (oldScript) oldScript.remove();
+
+      let script = document.createElement('script');
+      script.id = 'jsonpScriptTag';
+      script.src = `${WEB_APP_URL}?action=getProducts&callback=renderCustomerStore`;
+      script.onerror = function() {
+        document.getElementById('productGrid').innerHTML = `<div style="grid-column: 1 / -1; text-align: center; color: #dc2626; font-weight: bold;">Failed to load store catalog. Please try again later.</div>`;
+      };
+      document.body.appendChild(script);
+    }
+
+    function renderCustomerStore(data) {
+      if (data && data.status === "success") {
+        let grid = document.getElementById('productGrid');
+        grid.innerHTML = "";
+        let products = data.products || [];
+
+        if (products.length === 0) {
+          grid.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; color: #64748b; font-weight: bold; padding: 40px;">No products available right now.</div>`;
+          return;
+        }
+
+        products.forEach((p, index) => {
+          let rawImageUrl = p.imageUrl && p.imageUrl.trim() !== "" ? p.imageUrl : "https://images.unsplash.com/photo-1588702547919-26b89e0b2823?w=500&auto=format&fit=crop&q=60";
+          let imageUrl = getDriveDirectImageUrl(rawImageUrl);
+          let unitPrice = parseFloat(p.price) || 0;
+
+          let card = document.createElement('div');
+          card.className = "product-card";
+          card.setAttribute('data-name', (p.productName + " " + p.category).toLowerCase());
+          card.style.cssText = "background: #fff; border-radius: 20px; border: 1px solid #cbd5e1; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.03); cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease;";
+          card.onmouseover = () => { card.style.transform = "translateY(-4px)"; card.style.boxShadow = "0 10px 25px rgba(0,0,0,0.08)"; };
+          card.onmouseout = () => { card.style.transform = "translateY(0)"; card.style.boxShadow = "0 4px 12px rgba(0,0,0,0.03)"; };
+          
+          card.onclick = (e) => {
+            if(e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON' || e.target.closest('button')) return;
+            openModal(p, imageUrl);
+          };
+
+          card.innerHTML = `
+            <div style="height: 180px; background: #f8fafc; overflow: hidden; position: relative; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid #e2e8f0;">
+              <img src="${imageUrl}" alt="${p.productName}" style="max-height: 160px; width: 100%; object-fit: contain; padding: 10px; box-sizing: border-box;" onerror="this.src='https://images.unsplash.com/photo-1588702547919-26b89e0b2823?w=500'">
+              <span style="position: absolute; top: 12px; right: 12px; background: rgba(15,23,42,0.85); color: #fff; font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 8px;">${p.stock || 'In Stock'}</span>
+            </div>
+            <div style="padding: 20px; display: flex; flex-direction: column; flex: 1; justify-content: space-between;">
+              <div>
+                <span style="font-size: 11px; font-weight: 900; color: #059669; text-transform: uppercase;">${p.category || 'General'}</span>
+                <h3 style="font-size: 18px; font-weight: 900; color: #0f172a; margin: 6px 0 6px 0;">${p.productName}</h3>
+                <p style="font-size: 13px; font-weight: 600; color: #64748b; margin: 0 0 12px 0; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${p.details || 'Available at Digital & Xerox Pro.'}</p>
+              </div>
+              <div>
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; background: #f8fafc; padding: 10px; border-radius: 10px; border: 1px solid #e2e8f0;" onclick="event.stopPropagation()">
+                  <span style="font-size: 16px; font-weight: 900; color: #059669;">₹${p.price}</span>
+                  <div style="display: flex; align-items: center; gap: 6px;">
+                    <label style="font-size: 12px; font-weight: 800; color: #475569;">Qty:</label>
+                    <input type="number" id="qty_${index}" value="1" min="1" style="width: 50px; padding: 4px 6px; border-radius: 8px; border: 1px solid #cbd5e1; font-weight: 800; text-align: center; font-size: 13px; background: #fff;">
+                  </div>
+                </div>
+                <button onclick="promptCustomerDetails('${p.productName.replace(/'/g, "\\'")}', ${unitPrice}, '${p.productId}', '${imageUrl}', ${index})" style="width: 100%; background: #059669; color: #fff; padding: 12px; border-radius: 10px; font-weight: 800; font-size: 13px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 10px rgba(5,150,105,0.2);">
+                  <i class="fab fa-whatsapp" style="font-size: 16px;"></i><span>Order via WhatsApp</span>
+                </button>
+              </div>
+            </div>
+          `;
+          grid.appendChild(card);
+        });
+      }
+    }
+
+    function getDriveDirectImageUrl(url) {
+      if (!url) return "";
+      if (url.includes("drive.google.com")) {
+        let match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
+        if (match && match[1]) {
+          return `https://lh3.googleusercontent.com/d/${match[1]}=s400`;
+        }
+      }
+      return url;
+    }
+
+    function openModal(p, imageUrl) {
+      document.getElementById('modalImg').src = imageUrl;
+      document.getElementById('modalCategory').innerText = p.category || 'General';
+      document.getElementById('modalTitle').innerText = p.productName;
+      document.getElementById('modalId').innerText = "Product ID: " + p.productId;
+      document.getElementById('modalDetails').innerText = p.details || 'No additional specifications provided.';
+      document.getElementById('modalPrice').innerText = "₹" + p.price;
+      document.getElementById('modalQty').value = 1;
+
+      document.getElementById('modalOrderBtn').onclick = function() {
+        let qty = document.getElementById('modalQty').value || 1;
+        let total = parseFloat(p.price) * parseInt(qty);
+        
+        pendingOrderData = {
+          productName: p.productName,
+          productId: p.productId,
+          quantity: qty,
+          totalAmount: total,
+          imageUrl: imageUrl
+        };
+
+        closeModal();
+        document.getElementById('customerModal').style.display = 'flex';
+      };
+
+      document.getElementById('productModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('productModal').style.display = 'none';
+    }
+
+    function promptCustomerDetails(productName, unitPrice, productId, imageUrl, index) {
+      let qty = document.getElementById(`qty_${index}`).value || 1;
+      let totalAmount = unitPrice * qty;
+
+      pendingOrderData = {
+        productName: productName,
+        productId: productId,
+        quantity: qty,
+        totalAmount: totalAmount,
+        imageUrl: imageUrl
+      };
+
+      document.getElementById('customerModal').style.display = 'flex';
+    }
+
+    function closeCustomerModal() {
+      document.getElementById('customerModal').style.display = 'none';
+    }
+
+    function submitCustomerOrder(e) {
+      e.preventDefault();
+      let name = document.getElementById('custNameInput').value;
+      let phone = document.getElementById('custPhoneInput').value;
+
+      let btn = document.getElementById('proceedBtn');
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Saving Order to Google Sheet...`;
+
+      let payload = {
+        action: "saveStoreOrder",
+        customerName: name,
+        mobileNumber: phone,
+        productName: pendingOrderData.productName,
+        productId: pendingOrderData.productId,
+        quantity: pendingOrderData.quantity,
+        totalAmount: pendingOrderData.totalAmount,
+        imageUrl: pendingOrderData.imageUrl
+      };
+
+      fetch(WEB_APP_URL, {
+        method: "POST",
+        body: JSON.stringify(payload)
+      })
+      .then(res => res.json())
+      .then(data => {
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fab fa-whatsapp" style="font-size: 18px;"></i><span>Proceed to WhatsApp</span>`;
+        closeCustomerModal();
+
+        let generatedOrderId = data.orderId || 'ORD-STORE';
+
+        let msg = `🛍️ *NEW STORE ORDER (ID: ${generatedOrderId})*\n\n*Customer Name:* ${name}\n*Phone:* ${phone}\n\n*Product ID:* ${pendingOrderData.productId}\n*Item:* ${pendingOrderData.productName}\n*Quantity:* ${pendingOrderData.quantity}\n*Total Price:* ₹${pendingOrderData.totalAmount}\n\nPlease confirm availability and delivery/pickup.`;
+        
+        window.open(`https://wa.me/919894635213?text=${encodeURIComponent(msg)}`, '_blank');
+      })
+      .catch(err => {
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fab fa-whatsapp" style="font-size: 18px;"></i><span>Proceed to WhatsApp</span>`;
+        closeCustomerModal();
+
+        let msg = `🛍️ *NEW STORE ORDER*\n\n*Customer Name:* ${name}\n*Phone:* ${phone}\n\n*Product ID:* ${pendingOrderData.productId}\n*Item:* ${pendingOrderData.productName}\n*Quantity:* ${pendingOrderData.quantity}\n*Total Price:* ₹${pendingOrderData.totalAmount}`;
+        window.open(`https://wa.me/919894635213?text=${encodeURIComponent(msg)}`, '_blank');
+      });
+    }
+
+    function filterProducts() {
+      let input = document.getElementById('searchInput').value.toLowerCase();
+      let cards = document.getElementsByClassName('product-card');
+      for (let i = 0; i < cards.length; i++) {
+        let name = cards[i].getAttribute('data-name');
+        cards[i].style.display = name.includes(input) ? "flex" : "none";
+      }
+    }
+  </script>
+</body>
+</html>

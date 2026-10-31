@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Track Order - Digital & Xerox Pro</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { font-family: system-ui, -apple-system, sans-serif; background-color: #f1f5f9; color: #0f172a; margin: 0; }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-900">
+
+  <!-- Navbar -->
+  <header style="padding: 15px 30px; background: #0f172a; color: #fff; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1e293b; position: sticky; top: 0; z-index: 50;">
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <div style="width: 40px; height: 40px; background: #059669; color: #fff; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 900;">DS</div>
+      <span style="font-size: 18px; font-weight: 900; color: #fff;">Digital & Xerox Pro</span>
+    </div>
+    <nav style="display: flex; align-items: center; gap: 20px; font-size: 14px; font-weight: bold;">
+      <a href="index.html" style="color: #cbd5e1; text-decoration: none;">Home</a>
+      <a href="order.html" style="color: #cbd5e1; text-decoration: none;">Upload & Order</a>
+      <a href="store.html" style="color: #cbd5e1; text-decoration: none;">Online Store</a>
+      <a href="track.html" style="color: #34d399; text-decoration: none;">Track Order</a>
+    </nav>
+  </header>
+
+  <!-- Tracker Section -->
+  <div style="max-width: 750px; margin: 50px auto; padding: 0 20px; box-sizing: border-box;">
+    
+    <div style="text-align: center; margin-bottom: 30px;">
+      <span style="font-size: 11px; font-weight: 900; color: #059669; background: #d1fae5; padding: 6px 14px; border-radius: 20px; text-transform: uppercase; display: inline-block; margin-bottom: 10px;">Order Tracking Portal</span>
+      <h1 style="font-size: 30px; font-weight: 900; color: #0f172a; margin: 0 0 8px 0;">Track Your Order Status</h1>
+      <p style="font-size: 14px; color: #64748b; font-weight: 600; margin: 0;">Enter your Order ID (e.g. <code style="background: #e2e8f0; padding: 2px 6px; border-radius: 6px; font-family: monospace; color: #0f172a;">ORD-355790</code>) to check live progress.</p>
+    </div>
+
+    <!-- Search Box Card -->
+    <div style="background: #fff; padding: 25px; border-radius: 20px; border: 1px solid #cbd5e1; box-shadow: 0 10px 25px rgba(0,0,0,0.05); display: flex; gap: 12px; flex-wrap: wrap;">
+      <input type="text" id="trackIdInput" placeholder="Enter Order ID (e.g. ORD-355790)" style="flex: 1; min-width: 240px; box-sizing: border-box; padding: 14px 16px; border-radius: 12px; border: 1px solid #cbd5e1; font-family: monospace; font-size: 15px; font-weight: 700; outline: none; text-transform: uppercase;">
+      <button onclick="trackOrder()" id="trackBtn" style="background: #059669; color: #fff; font-weight: 900; padding: 14px 24px; border-radius: 12px; border: none; cursor: pointer; font-size: 15px; box-shadow: 0 4px 12px rgba(5,150,105,0.2); display: flex; align-items: center; gap: 8px;">
+        <i class="fas fa-search"></i><span>Track Order</span>
+      </button>
+    </div>
+
+    <!-- Result Box -->
+    <div id="resultBox" style="display: none; margin-top: 30px; background: #fff; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border-radius: 20px; padding: 30px; border: 1px solid #cbd5e1;">
+      
+      <div style="display: flex; justify-content: space-between; align-items: start; border-bottom: 1px solid #e2e8f0; padding-bottom: 20px; margin-bottom: 25px; flex-wrap: wrap; gap: 15px;">
+        <div>
+          <span style="font-size: 11px; font-weight: 900; color: #059669; background: #d1fae5; padding: 4px 12px; border-radius: 20px; text-transform: uppercase;">Live Status</span>
+          <h2 id="resOrderId" style="font-size: 22px; font-weight: 900; color: #0f172a; margin: 8px 0 4px 0; font-family: monospace;">ORD-XXXXXX</h2>
+          <p id="resCustomer" style="font-size: 14px; color: #475569; font-weight: 700; margin: 0;">Customer: -</p>
+        </div>
+        <div style="text-align: right;">
+          <span style="font-size: 12px; color: #64748b; font-weight: 700; display: block; margin-bottom: 4px;">Payment Status:</span>
+          <span id="resPayment" style="display: inline-block; background: #fef3c7; color: #d97706; font-weight: 900; padding: 4px 12px; border-radius: 20px; font-size: 13px;">Pending</span>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 20px;">
+        <p style="font-size: 13px; font-weight: 800; color: #64748b; text-transform: uppercase; margin: 0 0 5px 0;">Service Requested:</p>
+        <p id="resService" style="font-size: 16px; font-weight: 900; color: #0f172a; margin: 0;"></p>
+      </div>
+
+      <div style="margin-bottom: 25px;">
+        <p style="font-size: 13px; font-weight: 800; color: #64748b; text-transform: uppercase; margin: 0 0 5px 0;">File Uploaded:</p>
+        <a id="resFileLink" href="#" target="_blank" style="color: #059669; font-weight: 800; text-decoration: underline; font-size: 14px; display: inline-flex; align-items: center; gap: 6px;">
+          <i class="fas fa-file-alt"></i><span id="resFileName">View Document</span>
+        </a>
+      </div>
+
+      <!-- Progress Steps -->
+      <div style="border-top: 1px solid #e2e8f0; padding-top: 25px; display: flex; flex-direction: column; gap: 15px;">
+        <div id="step1" style="display: flex; align-items: center; gap: 12px; font-weight: 800; color: #cbd5e1; font-size: 15px;">
+          <i class="fas fa-check-circle" style="font-size: 18px;"></i><span>1. Order Received & Files Verified</span>
+        </div>
+        <div id="step2" style="display: flex; align-items: center; gap: 12px; font-weight: 800; color: #cbd5e1; font-size: 15px;">
+          <i class="fas fa-spinner" style="font-size: 18px;"></i><span>2. Processing / Printing & Binding in Progress</span>
+        </div>
+        <div id="step3" style="display: flex; align-items: center; gap: 12px; font-weight: 800; color: #cbd5e1; font-size: 15px;">
+          <i class="fas fa-check-double" style="font-size: 18px;"></i><span>3. Successfully Completed & Ready for Pickup / Delivery</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Error Message Box -->
+    <div id="errorBox" style="display: none; margin-top: 30px; background: #fff; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border-radius: 20px; padding: 30px; border: 1px solid #cbd5e1; text-align: center;">
+      <i class="fas fa-exclamation-circle" style="font-size: 36px; color: #dc2626; margin-bottom: 10px;"></i>
+      <h3 style="font-size: 18px; font-weight: 900; color: #0f172a; margin: 0 0 5px 0;">Order Not Found</h3>
+      <p style="font-size: 14px; color: #64748b; font-weight: 600; margin: 0;">Please check your Order ID and try again. (Example: ORD-355790)</p>
+    </div>
+
+  </div>
+
+  <script>
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxi1KoeE9kWFhzS_4yZVgBnsRPocx3QdBaovikxskBj76OVedvfamVZYDJ4xx4oFxrm/exec";
+
+    function trackOrder() {
+      let searchId = document.getElementById('trackIdInput').value.trim().toUpperCase();
+      let resultBox = document.getElementById('resultBox');
+      let errorBox = document.getElementById('errorBox');
+      
+      if (!searchId) {
+        alert("Please enter a valid Order ID.");
+        return;
+      }
+
+      let btn = document.getElementById('trackBtn');
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Searching...`;
+
+      resultBox.style.display = 'none';
+      errorBox.style.display = 'none';
+
+      let oldScript = document.getElementById('jsonpScriptTag');
+      if (oldScript) oldScript.remove();
+
+      let script = document.createElement('script');
+      script.id = 'jsonpScriptTag';
+      script.src = `${WEB_APP_URL}?action=getOrders&callback=handleTrackResponse`;
+      script.onerror = function() {
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fas fa-search"></i><span>Track Order</span>`;
+        alert("Failed to connect to order database.");
+      };
+      document.body.appendChild(script);
+    }
+
+    function handleTrackResponse(data) {
+      let btn = document.getElementById('trackBtn');
+      btn.disabled = false;
+      btn.innerHTML = `<i class="fas fa-search"></i><span>Track Order</span>`;
+
+      if (data && data.status === "success") {
+        let searchId = document.getElementById('trackIdInput').value.trim().toUpperCase();
+        let orders = data.orders || [];
+        
+        let found = orders.find(o => o.orderId.toString().toUpperCase() === searchId);
+
+        if (found) {
+          document.getElementById('resOrderId').innerText = found.orderId;
+          document.getElementById('resCustomer').innerText = `Customer: ${found.customerName} (${found.mobileNumber})`;
+          document.getElementById('resService').innerText = `${found.service} (Qty: ${found.quantity})`;
+          
+          let payBadge = document.getElementById('resPayment');
+          payBadge.innerText = found.paymentStatus || 'Pending';
+          if (found.paymentStatus === 'Paid Online') {
+            payBadge.style.background = '#d1fae5';
+            payBadge.style.color = '#065f46';
+          } else {
+            payBadge.style.background = '#fef3c7';
+            payBadge.style.color = '#d97706';
+          }
+
+          let fileLink = found.fileUrl;
+          let fileName = found.fileName || 'View Document';
+          document.getElementById('resFileLink').href = fileLink !== "#" ? fileLink : "#";
+          document.getElementById('resFileName').innerText = fileName;
+
+          // Update Progress Steps UI
+          let status = found.orderStatus || 'Order Received';
+          let step1 = document.getElementById('step1');
+          let step2 = document.getElementById('step2');
+          let step3 = document.getElementById('step3');
+
+          // Reset styles
+          step1.style.color = '#cbd5e1'; step1.querySelector('i').className = "fas fa-check-circle";
+          step2.style.color = '#cbd5e1'; step2.querySelector('i').className = "fas fa-spinner";
+          step3.style.color = '#cbd5e1'; step3.querySelector('i').className = "fas fa-check-double";
+
+          if (status === 'Order Received') {
+            step1.style.color = '#059669';
+          } else if (status === 'Processing') {
+            step1.style.color = '#059669';
+            step2.style.color = '#2563eb'; step2.querySelector('i').className = "fas fa-spinner fa-spin";
+          } else if (status === 'Completed') {
+            step1.style.color = '#059669';
+            step2.style.color = '#059669';
+            step3.style.color = '#059669';
+          }
+
+          document.getElementById('resultBox').style.display = 'block';
+        } else {
+          document.getElementById('errorBox').style.display = 'block';
+        }
+      } else {
+        document.getElementById('errorBox').style.display = 'block';
+      }
+    }
+  </script>
+</body>
+</html>

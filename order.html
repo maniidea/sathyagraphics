@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload & Order Print, Binding & Xerox - Digital & Xerox Pro</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { font-family: system-ui, -apple-system, sans-serif; background-color: #f1f5f9; color: #0f172a; margin: 0; }
+    .hidden { display: none !important; }
+    .flex { display: flex; }
+    .flex-col { flex-direction: column; }
+    .justify-between { justify-content: space-between; }
+    .items-center { align-items: center; }
+    .h-screen { height: 100vh; }
+    .overflow-hidden { overflow: hidden; }
+    .overflow-y-auto { overflow-y: auto; }
+    .flex-1 { flex: 1; }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-900">
+
+  <!-- Navbar -->
+  <header style="padding: 15px 30px; background: #0f172a; color: #fff; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1e293b; position: sticky; top: 0; z-index: 50;">
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <div style="width: 40px; height: 40px; background: #059669; color: #fff; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 900;">DS</div>
+      <span style="font-size: 18px; font-weight: 900; color: #fff;">Digital & Xerox Pro</span>
+    </div>
+    <nav style="display: flex; align-items: center; gap: 20px; font-size: 14px; font-weight: bold;">
+      <a href="index.html" style="color: #cbd5e1; text-decoration: none;">Home</a>
+      <a href="order.html" style="color: #34d399; text-decoration: none;">Upload & Order</a>
+      <a href="shop.html" style="color: #cbd5e1; text-decoration: none;">Online Store</a>
+      <a href="track.html" style="color: #cbd5e1; text-decoration: none;">Track Order</a>
+      <a href="admin.html" style="background: #059669; color: #fff; padding: 8px 14px; border-radius: 8px; text-decoration: none;">Admin Portal</a>
+    </nav>
+  </header>
+
+  <!-- Order Form Section -->
+  <div style="max-width: 800px; margin: 40px auto; padding: 0 20px; box-sizing: border-box;">
+    <div style="background: #fff; border-radius: 20px; padding: 40px; border: 1px solid #cbd5e1; box-shadow: 0 10px 25px rgba(0,0,0,0.05);">
+      
+      <div style="text-align: center; margin-bottom: 30px;">
+        <span style="font-size: 11px; font-weight: 900; color: #059669; background: #d1fae5; padding: 6px 14px; border-radius: 20px; text-transform: uppercase; display: inline-block; margin-bottom: 10px;">Document & Photo Upload Hub</span>
+        <h2 style="font-size: 26px; font-weight: 900; color: #0f172a; margin: 0 0 8px 0;">Upload Files for Printing & Binding</h2>
+        <p style="font-size: 14px; color: #64748b; font-weight: 600; margin: 0;">Upload your books, notes, photos, or documents for Xerox, spiral binding, lamination, and photo prints.</p>
+      </div>
+
+      <form id="orderForm" onsubmit="submitOrder(event)" style="display: flex; flex-direction: column; gap: 20px;">
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+          <div>
+            <label style="display: block; font-size: 13px; font-weight: 800; color: #334155; margin-bottom: 8px;">Full Name *</label>
+            <input type="text" id="custName" required placeholder="Enter your full name" style="width: 100%; box-sizing: border-box; padding: 12px 15px; border-radius: 12px; border: 1px solid #cbd5e1; font-size: 14px; outline: none; font-weight: 600;">
+          </div>
+          <div>
+            <label style="display: block; font-size: 13px; font-weight: 800; color: #334155; margin-bottom: 8px;">Mobile Number *</label>
+            <input type="tel" id="custMobile" required placeholder="10-digit mobile number" style="width: 100%; box-sizing: border-box; padding: 12px 15px; border-radius: 12px; border: 1px solid #cbd5e1; font-size: 14px; outline: none; font-weight: 600;">
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+          <div>
+            <label style="display: block; font-size: 13px; font-weight: 800; color: #334155; margin-bottom: 8px;">Select Service Type *</label>
+            <select id="custService" style="width: 100%; box-sizing: border-box; padding: 12px 15px; border-radius: 12px; border: 1px solid #cbd5e1; font-size: 14px; background: #fff; font-weight: 700; outline: none;">
+              <option value="Book Printing & Spiral Binding">📚 Book Printing & Spiral Binding</option>
+              <option value="Xerox / Photocopies (B&W or Colour)">📄 Xerox / Photocopies (B&W or Colour)</option>
+              <option value="Document Lamination (A4 / A3)">🛡️ Document Lamination (A4 / A3)</option>
+              <option value="Photo Printing & Album">🖼️ Photo Printing & Passport Photos</option>
+              <option value="ID Cards / PVC Cards">🪪 ID Cards / PVC Printing</option>
+            </select>
+          </div>
+          <div>
+            <label style="display: block; font-size: 13px; font-weight: 800; color: #334155; margin-bottom: 8px;">Copies / Pages Quantity *</label>
+            <input type="text" id="custQty" required placeholder="e.g. 2 Books, 150 pages, 5 copies" style="width: 100%; box-sizing: border-box; padding: 12px 15px; border-radius: 12px; border: 1px solid #cbd5e1; font-size: 14px; outline: none; font-weight: 600;">
+          </div>
+        </div>
+
+        <div>
+          <label style="display: block; font-size: 13px; font-weight: 800; color: #334155; margin-bottom: 8px;">Upload Photos, PDF Books, or Documents *</label>
+          <div style="border: 2px dashed #cbd5e1; border-radius: 16px; padding: 30px; text-align: center; background: #f8fafc; cursor: pointer; position: relative;">
+            <input type="file" id="fileUpload" required onchange="handleFileSelect(event)" style="position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;">
+            <i class="fas fa-cloud-upload-alt" style="font-size: 32px; color: #059669; margin-bottom: 10px;"></i>
+            <p id="fileLabel" style="font-size: 14px; font-weight: 800; color: #0f172a; margin: 0 0 4px 0;">Click to browse or drag & drop file here</p>
+            <p style="font-size: 12px; font-weight: 600; color: #64748b; margin: 0;">Supports PDF, DOCX, JPG, PNG, ZIP (Max 50MB)</p>
+          </div>
+        </div>
+
+        <div>
+          <label style="display: block; font-size: 13px; font-weight: 800; color: #334155; margin-bottom: 8px;">Binding & Print Instructions / Notes</label>
+          <textarea id="custReq" rows="3" placeholder="Mention Single/Double side print, Front/Back cover type, Hard/Soft Spiral binding, Color/B&W preference..." style="width: 100%; box-sizing: border-box; padding: 12px 15px; border-radius: 12px; border: 1px solid #cbd5e1; font-size: 14px; outline: none; font-weight: 600; resize: vertical;"></textarea>
+        </div>
+
+        <button type="submit" id="submitBtn" style="width: 100%; background: #059669; color: #fff; padding: 16px; border-radius: 12px; font-weight: 900; font-size: 16px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 10px 20px rgba(5, 150, 105, 0.2);">
+          <i class="fab fa-whatsapp" style="font-size: 20px;"></i>
+          <span>Upload to Drive & Send Order on WhatsApp</span>
+        </button>
+
+      </form>
+    </div>
+  </div>
+
+  <script>
+    let selectedFile = null;
+
+    function handleFileSelect(event) {
+      let file = event.target.files[0];
+      if (file) {
+        selectedFile = file;
+        let label = document.getElementById('fileLabel');
+        label.innerText = `Selected: ${file.name}`;
+        label.style.color = '#059669';
+      }
+    }
+
+    function submitOrder(e) {
+      e.preventDefault();
+      
+      if (!selectedFile) {
+        alert('Please attach a file before submitting.');
+        return;
+      }
+
+      let btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Uploading to Google Drive... Please wait...`;
+
+      let reader = new FileReader();
+      reader.readAsDataURL(selectedFile);
+      reader.onload = function () {
+        let base64Data = reader.result.split(',')[1];
+        
+        let orderData = {
+          orderId: 'ORD-' + Math.floor(100000 + Math.random() * 900000),
+          customerName: document.getElementById('custName').value,
+          mobileNumber: document.getElementById('custMobile').value,
+          service: document.getElementById('custService').value,
+          quantity: document.getElementById('custQty').value,
+          requirements: document.getElementById('custReq').value,
+          fileName: selectedFile.name,
+          mimeType: selectedFile.type,
+          fileData: base64Data
+        };
+
+        fetch('https://script.google.com/macros/s/AKfycbxi1KoeE9kWFhzS_4yZVgBnsRPocx3QdBaovikxskBj76OVedvfamVZYDJ4xx4oFxrm/exec', {
+          method: 'POST',
+          body: JSON.stringify(orderData)
+        })
+        .then(response => response.json())
+        .then(data => {
+          btn.disabled = false;
+          btn.innerHTML = `<i class="fab fa-whatsapp" style="font-size: 20px;"></i><span>Upload to Drive & Send Order on WhatsApp</span>`;
+
+          if (data.status === 'success') {
+            let msg = `Hello! I have uploaded my file for printing/binding.\n\n*Order ID:* ${orderData.orderId}\n*Name:* ${orderData.customerName}\n*Service:* ${orderData.service}\n*Quantity:* ${orderData.quantity}\n*Drive Folder Sorted:* ${data.folderSorted}\n*Google Drive File Link:* ${data.fileUrl}\n\nPlease check my files and share the quote.`;
+            
+            window.open(`https://wa.me/919894635213?text=${encodeURIComponent(msg)}`, '_blank');
+          } else {
+            alert('Upload failed: ' + data.message);
+          }
+        })
+        .catch(error => {
+          btn.disabled = false;
+          btn.innerHTML = `<i class="fab fa-whatsapp" style="font-size: 20px;"></i><span>Upload to Drive & Send Order on WhatsApp</span>`;
+          console.error('Error:', error);
+          alert('An error occurred during upload. Please check your internet connection.');
+        });
+      };
+    }
+  </script>
+</body>
+</html>
